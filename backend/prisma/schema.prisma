@@ -1,0 +1,394 @@
+// This is your Prisma schema file
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  LEARNER
+  GUIDE
+  DUAL
+  ADMIN
+}
+
+enum SessionLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum TemplateType {
+  SKILL_BREAKDOWN
+  QUICK_START
+  PRACTICAL_DRILL
+  CONCEPT_TO_ACTION
+}
+
+enum BadgeType {
+  TOP_GUIDE
+  RISING_STAR
+  VERIFIED
+  PERFECT_SCORE
+  FOUNDER
+  ACTIVE_LEARNER
+  STREAK
+}
+
+// ─── MODELS ───────────────────────────────────────────────────────────────────
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String    @map("password_hash")
+  name            String
+  role            Role      @default(LEARNER)
+  bio             String?
+  location        String?
+  avatarUrl       String?   @map("avatar_url")
+  verified        Boolean   @default(false)
+  verifiedAt      DateTime? @map("verified_at")
+  responseTime    String?   @map("response_time")
+  completionRate  Float     @default(100) @map("completion_rate")
+  stripeAccountId String?   @map("stripe_account_id")
+  stripeCustomerId String?  @map("stripe_customer_id")
+  isActive        Boolean   @default(true) @map("is_active")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  refreshTokens   RefreshToken[]
+  guidedSessions  Session[]      @relation("SessionGuide")
+  bookingsAsLearner Booking[]    @relation("BookingLearner")
+  reviewsGiven    Review[]       @relation("ReviewLearner")
+  reviewsReceived Review[]       @relation("ReviewGuide")
+  badges          UserBadge[]
+  skills          UserSkill[]
+  skillPaths      UserSkillPath[]
+  earnings        Earning[]
+  notifications   Notification[]
+  guideAvailability GuideAvailability?
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime @map("expires_at")
+  isRevoked   Boolean  @default(false) @map("is_revoked")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  label    String
+  icon     String
+  color    String
+  sessions Session[]
+
+  @@map("categories")
+}
+
+model Session {
+  id               String       @id @default(cuid())
+  title            String
+  outcome          String
+  duration         Int
+  price            Decimal      @db.Decimal(10, 2)
+  level            SessionLevel @default(BEGINNER)
+  template         TemplateType @default(SKILL_BREAKDOWN)
+  remote           Boolean      @default(true)
+  local            Boolean      @default(false)
+  featured         Boolean      @default(false)
+  trending         Boolean      @default(false)
+  isActive         Boolean      @default(true) @map("is_active")
+  totalBooked      Int          @default(0) @map("total_booked")
+  averageRating    Float        @default(0) @map("average_rating")
+  reviewCount      Int          @default(0) @map("review_count")
+  takeaway         String
+  followUpExercise String       @map("follow_up_exercise")
+  nextAvailable    String?      @map("next_available")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  categoryId       String       @map("category_id")
+  category         Category     @relation(fields: [categoryId], references: [id])
+  guideId          String       @map("guide_id")
+  guide            User         @relation("SessionGuide", fields: [guideId], references: [id])
+
+  steps            SessionStep[]
+  materials        SessionMaterial[]
+  tags             SessionTag[]
+  bookings         Booking[]
+  reviews          Review[]
+  skillPathItems   SkillPathSession[]
+
+  @@index([guideId])
+  @@index([categoryId])
+  @@index([featured])
+  @@index([trending])
+  @@map("sessions")
+}
+
+model SessionStep {
+  id          String  @id @default(cuid())
+  order       Int
+  title       String
+  duration    Int
+  description String
+  sessionId   String  @map("session_id")
+  session     Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_steps")
+}
+
+model SessionMaterial {
+  id        String  @id @default(cuid())
+  label     String
+  sessionId String  @map("session_id")
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_materials")
+}
+
+model SessionTag {
+  id        String  @id @default(cuid())
+  tag       String
+  sessionId String  @map("session_id")
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_tags")
+}
+
+model Booking {
+  id           String        @id @default(cuid())
+  sessionId    String        @map("session_id")
+  session      Session       @relation(fields: [sessionId], references: [id])
+  learnerId    String        @map("learner_id")
+  learner      User          @relation("BookingLearner", fields: [learnerId], references: [id])
+  status       BookingStatus @default(PENDING)
+  scheduledAt  DateTime      @map("scheduled_at")
+  completedAt  DateTime?     @map("completed_at")
+  cancelledAt  DateTime?     @map("cancelled_at")
+  meetingLink  String?       @map("meeting_link")
+  notes        String?
+  recap        String?
+  calendarEventId String?    @map("calendar_event_id")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  payment      Payment?
+  review       Review?
+
+  @@index([learnerId])
+  @@index([sessionId])
+  @@index([status])
+  @@map("bookings")
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  bookingId             String        @unique @map("booking_id")
+  booking               Booking       @relation(fields: [bookingId], references: [id])
+  amount                Decimal       @db.Decimal(10, 2)
+  platformFee           Decimal       @db.Decimal(10, 2) @map("platform_fee")
+  guideEarning          Decimal       @db.Decimal(10, 2) @map("guide_earning")
+  currency              String        @default("usd")
+  status                PaymentStatus @default(PENDING)
+  stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
+  stripeChargeId        String?       @map("stripe_charge_id")
+  refundedAt            DateTime?     @map("refunded_at")
+  refundReason          String?       @map("refund_reason")
+  createdAt             DateTime      @default(now()) @map("created_at")
+  updatedAt             DateTime      @updatedAt @map("updated_at")
+
+  earning               Earning?
+
+  @@index([stripePaymentIntentId])
+  @@map("payments")
+}
+
+model Earning {
+  id         String   @id @default(cuid())
+  guideId    String   @map("guide_id")
+  guide      User     @relation(fields: [guideId], references: [id])
+  paymentId  String   @unique @map("payment_id")
+  payment    Payment  @relation(fields: [paymentId], references: [id])
+  amount     Decimal  @db.Decimal(10, 2)
+  paidOut    Boolean  @default(false) @map("paid_out")
+  paidOutAt  DateTime? @map("paid_out_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([guideId])
+  @@map("earnings")
+}
+
+model Review {
+  id              String  @id @default(cuid())
+  sessionId       String  @map("session_id")
+  session         Session @relation(fields: [sessionId], references: [id])
+  learnerId       String  @map("learner_id")
+  learner         User    @relation("ReviewLearner", fields: [learnerId], references: [id])
+  guideId         String  @map("guide_id")
+  guide           User    @relation("ReviewGuide", fields: [guideId], references: [id])
+  bookingId       String  @unique @map("booking_id")
+  booking         Booking @relation(fields: [bookingId], references: [id])
+  rating          Int
+  outcomeAchieved Boolean @default(false) @map("outcome_achieved")
+  comment         String
+  helpfulCount    Int     @default(0) @map("helpful_count")
+  isPublished     Boolean @default(true) @map("is_published")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([sessionId])
+  @@index([guideId])
+  @@index([learnerId])
+  @@map("reviews")
+}
+
+model Template {
+  id           TemplateType @id
+  title        String
+  subtitle     String
+  description  String
+  color        String
+  icon         String
+  sessionCount Int          @default(0) @map("session_count")
+  bestFor      String[]     @map("best_for")
+  steps        TemplateStep[]
+
+  @@map("templates")
+}
+
+model TemplateStep {
+  id           String       @id @default(cuid())
+  order        Int
+  title        String
+  description  String
+  duration     String
+  tip          String
+  templateId   TemplateType @map("template_id")
+  template     Template     @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+  @@map("template_steps")
+}
+
+model UserBadge {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     BadgeType
+  awardedAt DateTime  @default(now()) @map("awarded_at")
+
+  @@unique([userId, badge])
+  @@map("user_badges")
+}
+
+model UserSkill {
+  id      String @id @default(cuid())
+  userId  String @map("user_id")
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill   String
+
+  @@unique([userId, skill])
+  @@map("user_skills")
+}
+
+model SkillPath {
+  id          String             @id @default(cuid())
+  title       String
+  description String
+  categoryId  String             @map("category_id")
+  isActive    Boolean            @default(true) @map("is_active")
+  createdAt   DateTime           @default(now()) @map("created_at")
+
+  sessions    SkillPathSession[]
+  userPaths   UserSkillPath[]
+
+  @@map("skill_paths")
+}
+
+model SkillPathSession {
+  id          String    @id @default(cuid())
+  order       Int
+  skillPathId String    @map("skill_path_id")
+  skillPath   SkillPath @relation(fields: [skillPathId], references: [id], onDelete: Cascade)
+  sessionId   String    @map("session_id")
+  session     Session   @relation(fields: [sessionId], references: [id])
+
+  @@unique([skillPathId, sessionId])
+  @@map("skill_path_sessions")
+}
+
+model UserSkillPath {
+  id                  String    @id @default(cuid())
+  userId              String    @map("user_id")
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillPathId         String    @map("skill_path_id")
+  skillPath           SkillPath @relation(fields: [skillPathId], references: [id])
+  completedSessions   Int       @default(0) @map("completed_sessions")
+  enrolledAt          DateTime  @default(now()) @map("enrolled_at")
+  completedAt         DateTime? @map("completed_at")
+
+  @@unique([userId, skillPathId])
+  @@map("user_skill_paths")
+}
+
+model GuideAvailability {
+  id        String   @id @default(cuid())
+  guideId   String   @unique @map("guide_id")
+  guide     User     @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  slots     Json
+  timezone  String   @default("UTC")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("guide_availability")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
