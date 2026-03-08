@@ -1,90 +1,137 @@
-# SkillBridge Software License
-**Version 1.0 — 2026**
+SkillBridge Software License
+Version 1.0 -- 2026
 
 Copyright (c) 2026. All rights reserved.
 
----
+------------------------------------------------------------------------
 
-## 1. Definitions
+1. DEFINITIONS
 
-- **"Software"** means the SkillBridge source code, documentation, and all associated files in this repository.
-- **"Licensor"** means the copyright holder identified above.
-- **"You"** means the individual or legal entity exercising rights under this License.
-- **"Commercial Use"** means any use of the Software, in whole or in part, that directly or indirectly generates revenue, including but not limited to: operating a paid platform or marketplace, charging subscription or booking fees, licensing the Software to third parties, or embedding it in a commercial product or service.
-- **"Gross Revenue"** means all income received by You (or any entity You control) attributable to a product or service that incorporates or derives from the Software, before deduction of costs or expenses.
+"Software" means the SkillBridge source code, documentation, and all
+associated files in this repository.
 
----
+"Licensor" means the copyright holder identified above.
 
-## 2. Permitted Uses (No Payment Required)
+"You" means the individual or legal entity exercising rights under this
+License.
 
-You may use, copy, modify, and run the Software **free of charge** for:
+"Commercial Use" means any use of the Software, in whole or in part,
+that directly or indirectly generates revenue, including but not limited
+to: operating a paid platform or marketplace, charging subscription or
+booking fees, licensing the Software to third parties, or embedding it
+in a commercial product or service.
 
-- Personal, non-commercial projects;
-- Academic research and educational purposes;
-- Internal evaluation or testing (not deployed to end users);
-- Open-source projects that do not generate revenue.
+"Gross Revenue" means all income received by You (or any entity You
+control) attributable to a product or service that incorporates or
+derives from the Software, before deduction of costs or expenses.
 
----
+------------------------------------------------------------------------
 
-## 3. Commercial Use — Royalty Obligation
+2. PERMITTED USES (NO PAYMENT REQUIRED)
+
+You may use, copy, modify, and run the Software free of charge for:
+
+  a) Personal, non-commercial projects;
+  b) Academic research and educational purposes;
+  c) Internal evaluation or testing (not deployed to end users);
+  d) Open-source projects that do not generate revenue.
+
+------------------------------------------------------------------------
+
+3. COMMERCIAL USE -- ROYALTY OBLIGATION
 
 If You engage in Commercial Use, You must:
 
-1. **Notify the Licensor** in writing before launching any commercial deployment (email address below).
-2. **Pay a royalty of 5% (five percent) of Gross Revenue** generated from any product or service that uses or is derived from the Software. Royalties are calculated monthly and due within 30 days of the end of each calendar month.
-3. **Maintain accurate records** of Gross Revenue attributable to the Software and make them available to the Licensor upon reasonable written request, no more than once per calendar year.
-4. **Display attribution** in your product: *"Powered by SkillBridge technology"* or equivalent, in a reasonably visible location (e.g. footer, about page, or credits).
+  a) Notify the Licensor in writing before launching any commercial
+     deployment (contact details in Section 9).
 
-Failure to comply with this section constitutes a material breach of this License and immediately terminates all rights granted herein.
+  b) Pay a royalty of 5% (five percent) of Gross Revenue generated from
+     any product or service that uses or is derived from the Software.
+     Royalties are calculated monthly and due within 30 days of the end
+     of each calendar month.
 
----
+  c) Maintain accurate records of Gross Revenue attributable to the
+     Software and make them available to the Licensor upon reasonable
+     written request, no more than once per calendar year.
 
-## 4. Restrictions
+  d) Display attribution in your product: "Powered by SkillBridge
+     technology" or equivalent, in a reasonably visible location
+     (e.g. footer, about page, or credits).
 
-You may **not**, under any circumstances:
+Failure to comply with this section constitutes a material breach of
+this License and immediately terminates all rights granted herein.
 
-- Sublicense, sell, or transfer the Software or any derivative work as a standalone product without a separate written agreement with the Licensor;
-- Remove or alter any copyright, attribution, or license notices in the Software;
-- Use the name "SkillBridge", its logo, or the Licensor's name to endorse or promote products without prior written consent.
+------------------------------------------------------------------------
 
----
+4. RESTRICTIONS
 
-## 5. Contributions
+You may not, under any circumstances:
 
-Any modifications or derivative works You contribute back to the main repository are licensed to the Licensor under the same terms, and You grant the Licensor a perpetual, worldwide, royalty-free license to use, reproduce, and distribute such contributions.
+  a) Sublicense, sell, or transfer the Software or any derivative work
+     as a standalone product without a separate written agreement with
+     the Licensor;
 
----
+  b) Remove or alter any copyright, attribution, or license notices in
+     the Software;
 
-## 6. No Warranty
+  c) Use the name "SkillBridge", its logo, or the Licensor's name to
+     endorse or promote products without prior written consent.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+------------------------------------------------------------------------
 
----
+5. CONTRIBUTIONS
 
-## 7. Termination
+Any modifications or derivative works You contribute back to the main
+repository are licensed to the Licensor under the same terms, and You
+grant the Licensor a perpetual, worldwide, royalty-free license to use,
+reproduce, and distribute such contributions.
 
-This License and all rights granted hereunder terminate automatically if You:
+------------------------------------------------------------------------
 
-- Breach any term of this License and fail to cure the breach within 30 days of written notice;
-- Engage in Commercial Use without notifying the Licensor or paying required royalties.
+6. NO WARRANTY
 
-Upon termination, You must cease all use and destroy all copies of the Software in your possession.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
 
----
+------------------------------------------------------------------------
 
-## 8. Governing Law
+7. TERMINATION
 
-This License shall be governed by and construed in accordance with the laws of **Italy**, without regard to its conflict-of-law provisions. Any disputes shall be resolved in the courts of competent jurisdiction in Italy.
+This License and all rights granted hereunder terminate automatically
+if You:
 
----
+  a) Breach any term of this License and fail to cure the breach within
+     30 days of written notice;
 
-## 9. Contact
+  b) Engage in Commercial Use without notifying the Licensor or paying
+     required royalties.
 
-For commercial licensing inquiries, royalty arrangements, or to notify the Licensor of commercial deployment:
+Upon termination, You must cease all use and destroy all copies of the
+Software in your possession.
 
-> **Email:** [sergiocomella@gmail.com]
-> **Subject line:** `SkillBridge Commercial License`
+------------------------------------------------------------------------
 
----
+8. GOVERNING LAW
 
-*This is a proprietary source-available license. It is not an OSI-approved open-source license.*
+This License shall be governed by and construed in accordance with the
+laws of Italy, without regard to its conflict-of-law provisions. Any
+disputes shall be resolved in the courts of competent jurisdiction in
+Italy.
+
+------------------------------------------------------------------------
+
+9. CONTACT
+
+For commercial licensing inquiries, royalty arrangements, or to notify
+the Licensor of commercial deployment:
+
+  Email:   [sergiocomella@gmail.com]
+  Subject: SkillBridge Commercial License
+
+------------------------------------------------------------------------
+
+This is a proprietary source-available license.
+It is not an OSI-approved open-source license.
