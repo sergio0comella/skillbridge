@@ -29,6 +29,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }))
+app.set('trust proxy', 1)
 
 // ── Raw body for Stripe webhooks ──────────────────────────────────────────────
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' }))
